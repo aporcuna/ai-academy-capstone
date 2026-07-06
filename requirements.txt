@@ -1,0 +1,15 @@
+# --- Core RAG & Document Parsing ---
+langchain                # Core RAG framework
+langchain-core           # Fundamental structures (Documents, Prompts)
+langchain-community      # Extra community utilities if needed
+
+# --- Embeddings ---
+langchain-openai         # LangChain bridge for OpenAI models
+
+# --- Vector Database ---
+langchain-chroma         # Dedicated integration for ChromaDB
+chromadb                 # The underlying vector database engine
+
+# --- Orchestration & UI ---
+python-dotenv            # Environment variable management
+streamlit                # Framework for the Chatbot UI

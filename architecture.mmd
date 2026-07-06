@@ -1,0 +1,49 @@
+graph TD
+    %% Accessibility Custom Classes (Solid backgrounds + Locked high-contrast text color for Light/Dark mode resilience)
+    classDef ui fill:#E1F5FE,stroke:#0288D1,stroke-width:2px,color:#01579B;
+    classDef rag fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#1B5E20;
+    classDef agent fill:#FFF3E0,stroke:#EF6C00,stroke-width:2px,color:#E65100;
+    classDef cloud fill:#F3E5F5,stroke:#6A1B9A,stroke-width:2px,color:#4A148C;
+    classDef db fill:#ECEFF1,stroke:#37474F,stroke-width:2px,color:#263238;
+
+    subgraph PIPELINE_RAG [Phase 1: Knowledge Base Ingestion - main.py]
+        Docs[Raw Docs: Glossary & Testing Guides] --> Chunking[Semantic Chunking Engine]
+        Chunking --> EmbedCloud[GitHub Models: text-embedding-3-small]
+        EmbedCloud --> VectorStore[(Local ChromaDB: chroma_db/)]
+    end
+
+    subgraph AGENT_LOOP [Phase 2: AI Gherkin Agent App / UI - app.py]
+        User([QA Engineer / Developer]) -->|Fills Requirements| UI[Streamlit UI Interface]
+        
+        subgraph Inputs [Structured User Stories]
+            UI --> BACs[Business ACs]
+            UI --> TechACs[Technical ACs]
+            UI --> TechNotes[Technical Notes]
+        end
+        
+        Inputs -->|Trigger Pipeline| Orchestrator[Agent Orchestrator]
+        
+        %% Retrieval connection to RAG Pipeline
+        VectorStore -.->|Context Semantic Lookup| Orchestrator
+        
+        Orchestrator -->|Context + Inputs| Actor[Gherkin Actor]
+        Actor -->|Generates Draft| Tool[Tool: Gherkin Syntax Linter]
+        Tool -->|Draft + Linter Report| Critic[Gherkin Critic]
+        
+        Critic -->|Quality Audit Report| Decision{All Correct?}
+        
+        Decision -->|No| Refiner[Gherkin Refiner]
+        Refiner -->|Polished Feature| Evaluator[Gherkin Test Evaluator]
+        
+        Decision -->|Yes| Evaluator
+        
+        Evaluator -->|Scores & Analytics| UI
+        Evaluator -->|Final Clean .feature| Monorepo[Export to Monorepo Workspace]
+    end
+
+    %% Assigning Classes
+    class UI,BACs,TechACs,TechNotes,User,Monorepo ui;
+    class Docs,Chunking rag;
+    class Orchestrator,Actor,Critic,Refiner,Tool,Evaluator,Decision agent;
+    class EmbedCloud cloud;
+    class VectorStore db;
