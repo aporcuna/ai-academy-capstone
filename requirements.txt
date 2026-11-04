@@ -13,3 +13,6 @@ chromadb                 # The underlying vector database engine
 # --- Orchestration & UI ---
 python-dotenv            # Environment variable management
 streamlit                # Framework for the Chatbot UI
+
+# --- Testing ---
+pytest>=8.0              # Unit test runner
