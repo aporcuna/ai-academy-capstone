@@ -1,0 +1,11 @@
+{
+    "permission": {
+        "bash": "allow",
+        "edit": "allow",
+        "write": "allow",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow"
+    },
+    "model": "opencode/big-pickle"
+}
