@@ -13,6 +13,11 @@ chunks/
 processed_texts/
 data/
 
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
 # IDE files
 .vscode/
 .idea/

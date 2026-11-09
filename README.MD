@@ -65,6 +65,32 @@ Create a .env file in the root folder of the project and add your GitHub token:
    ```
     pip install -r requirements.txt
    ```
+# Running Unit Tests
+
+The unit tests use `pytest` and run entirely against local temporary directories. They do not require a GitHub token, network access, or a populated vector database.
+
+1. **Install the project dependencies** (includes `pytest`):
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Run the full test suite** from the repository root:
+   ```bash
+   python -m pytest
+   ```
+
+3. **Run only the document loader tests**:
+   ```bash
+   python -m pytest tests/test_document_loader.py
+   ```
+
+4. **Run tests with verbose output**:
+   ```bash
+   python -m pytest -v
+   ```
+
+Test files live in the `tests/` directory. `tests/conftest.py` adds `src/` to the Python path, so modules can be imported with their package names (for example, `from data_storage.document_loader import load_chunks_from_directory`).
+
 # Running the Application
 
 ### Step 1: Ingest and Index Knowledge Documentation (RAG Population)
