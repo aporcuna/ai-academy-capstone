@@ -1,6 +1,7 @@
 import os
 from langchain_openai import ChatOpenAI
 from utils.utils import getPatToken
+from utils.model_config import DEFAULT_MODEL, resolve_model_name
 from data_generation.retriever import get_relevant_context
 
 # Absolute imports from the newly created modules
@@ -11,16 +12,17 @@ from agent.refiner import GherkinRefiner
 from agent.tools import GherkinTools
 
 class GherkinAgentOrchestrator:
-    def __init__(self, db_dir: str, model_name: str = "gpt-4o"):
+    def __init__(self, db_dir: str, model_name: str = DEFAULT_MODEL):
         """
         Coordinates the whole agentic execution loop (Actor-Critic-Refiner).
         Injects a unified cloud LLM client into the specialized sub-components.
         """
         self.db_dir = db_dir
+        self.model_name = resolve_model_name(model_name)
        
         # Unified high-performance LLM client setup
         shared_llm = ChatOpenAI(
-            model=model_name,
+            model=self.model_name,
             base_url="https://models.inference.ai.azure.com",
             api_key=getPatToken(),
             temperature=0.2

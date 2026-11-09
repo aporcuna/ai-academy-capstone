@@ -9,6 +9,11 @@ sys.path.append(os.path.join(BASE_DIR, "src"))
 
 from agent.orchestrator import GherkinAgentOrchestrator
 from agent.evaluator import GherkinTestEvaluator
+from utils.model_config import (
+    DEFAULT_MODEL,
+    get_supported_models,
+    resolve_model_name,
+)
 
 # Page Configuration
 st.set_page_config(
@@ -28,6 +33,16 @@ if not os.path.exists(DB_DIR):
     st.error(f"❌ Vector database 'chroma_db' not found at: {DB_DIR}")
     st.info("Please run 'python main.py' first in your terminal to index your project documentation.")
     st.stop()
+
+# Model selection (defaults to gpt-4o)
+with st.sidebar:
+    st.subheader("Model Configuration")
+    selected_model = st.selectbox(
+        "LLM model",
+        options=get_supported_models(),
+        index=get_supported_models().index(DEFAULT_MODEL),
+        help="Select the LLM used by the Actor, Critic, and Refiner."
+    )
 
 # Layout: Split the screen into input areas and configuration sidebar
 st.subheader("📋 Fill each tab with the corresponding section of your user story")
@@ -66,7 +81,10 @@ if st.button("🚀 Run Agentic Pipeline", type="primary"):
         # 1. Initialize the modular Orchestrator
         with st.spinner("Initializing AI Orchestrator & loading components..."):
             try:
-                orchestrator = GherkinAgentOrchestrator(db_dir=DB_DIR, model_name="gpt-4o")
+                orchestrator = GherkinAgentOrchestrator(
+                    db_dir=DB_DIR,
+                    model_name=resolve_model_name(selected_model)
+                )
             except Exception as e:
                 st.error(f"Initialization Error: {str(e)}")
                 st.stop()
